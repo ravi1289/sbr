@@ -12,12 +12,16 @@ public class StaticUtils {
 
     }
     private User loggedInUser;
-    private static StaticUtils getInstance() {
+    public static StaticUtils getInstance() {
         return staticUtils;
     }
     private static final String TAG = "StaticUtils";
 
     public void setLoggedInUser(User loggedInUser) {
         this.loggedInUser = loggedInUser;
+    }
+
+    public User getLoggedInUser() {
+        return loggedInUser;
     }
 }

@@ -15,6 +15,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.flipkart.studio34.models.User;
+import com.flipkart.studio34.utils.StaticUtils;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -95,7 +96,9 @@ public class LoginActivity extends AppCompatActivity implements
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
-            GoogleSignInAccount acct = result.getSignInAccount();
+            final GoogleSignInAccount account = result.getSignInAccount();
+            final User user = new User(account.getId(), account.getDisplayName(), account.getEmail());
+            StaticUtils.getInstance().setLoggedInUser(user);
             updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
@@ -173,7 +176,7 @@ public class LoginActivity extends AppCompatActivity implements
         if (signedIn) {
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             findViewById(R.id.sign_out_and_disconnect).setVisibility(View.VISIBLE);
-            Intent nextActivity = new Intent(this, MainActivity.class);
+            Intent nextActivity = new Intent(this, AudioLaunchActivity.class);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 startActivity(nextActivity, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
             } else {
@@ -207,9 +210,9 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     private void addLoginInfo(GoogleSignInResult result) {
-        String url = "http://172.17.93.177:28020/studio34/user";
+        String url = Constants.LOCALIP + "/studio34/user";
         final GoogleSignInAccount account = result.getSignInAccount();
-        User user = new User(account.getId(), account.getDisplayName(), account.getEmail());
+        final User user = new User(account.getId(), account.getDisplayName(), account.getEmail());
         Gson gson = new Gson();
         JSONObject jsonObject = null;
         try {
