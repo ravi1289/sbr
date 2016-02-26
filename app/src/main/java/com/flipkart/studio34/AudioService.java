@@ -19,6 +19,7 @@ import java.io.IOException;
 public class AudioService extends Service implements MediaPlayer.OnCompletionListener{
 
     private String currentSongUrl;
+    private boolean isResetDone=false;
 
     @Override
     public void onCreate() {
@@ -47,6 +48,7 @@ public class AudioService extends Service implements MediaPlayer.OnCompletionLis
                     !url.equals(currentSongUrl)) {
                 MediaPlayerInstance.getMediaPlayer().stop();
                 MediaPlayerInstance.getMediaPlayer().reset();
+                isResetDone = true;
                 currentSongUrl = url;
                 playSong(url);
             }
@@ -104,8 +106,12 @@ public class AudioService extends Service implements MediaPlayer.OnCompletionLis
     @Override
     public void onCompletion(MediaPlayer mp) {
        // if(mp.getCurrentPosition()>= mp.getDuration()) {
+        if(isResetDone){
+            isResetDone = false;
+        }else {
             EventBus.getDefault().post(new CurrentSongStateEvent(Constants.STOP));
             currentSongUrl = null;
+        }
         //}
     }
 }
