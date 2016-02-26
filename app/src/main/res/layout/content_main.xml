@@ -17,13 +17,13 @@
         android:id="@+id/play_layout"
         android:padding="@dimen/padding_small"
         android:layout_width="match_parent"
-        android:layout_height="300dp">
+        android:layout_height="170dp">
     <ImageView
         android:layout_above="@+id/timerDisplay"
         android:id="@+id/play_thumbnail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/studio_34_bg"/>
+        android:background="@drawable/music"/>
         <LinearLayout
             android:id="@+id/timerDisplay"
             android:layout_above="@+id/songProgressBar"
@@ -75,6 +75,10 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp">
             <!-- Backward Button -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
             <ImageButton
                 android:id="@+id/btnBackward"
                 android:src="@drawable/ic_fast_rewind_red_100_36dp"
@@ -95,6 +99,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"/>
+            <ImageButton
+                    android:id="@+id/add_playlist"
+                    android:src="@drawable/ic_add_circle_outline_deep_purple_400_36dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/padding_small"
+                    android:background="@null"/>
+                <ImageButton
+                    android:id="@+id/like_button"
+                    android:src="@drawable/ic_thumb_up_deep_purple_300_36dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/padding_small"
+                    android:background="@null"/>
+                <ImageButton
+                    android:id="@+id/unlike_button"
+                    android:src="@drawable/ic_thumb_down_deep_purple_300_36dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/padding_small"
+                    android:background="@null"/>
+            </LinearLayout>
+
     </LinearLayout>
     </RelativeLayout>
     <ListView
