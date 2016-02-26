@@ -42,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     private Handler mHandler = new Handler();
     private String url = "http://10.47.2.2/studio34/13Jan2016.mp3";
     private String podcastBaseInfoUrl = Constants.LOCALIP + "/studio34/podcastInfo";
+    private ImageView forwardButton;
+    private ImageView backwardButton;
+    List<MediaMetaData> mediaMetaDataList;
 
     private String getpodcastInfoUrl(Podcast podcast , String userId){
         String url = podcastBaseInfoUrl + "?" + "podCastId=" +
@@ -60,6 +63,55 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
 
 
     };
+
+
+    private AdapterView.OnClickListener onButtonForwardClickedListener = new AdapterView.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            int seek = MediaPlayerInstance.getMediaPlayer().getCurrentPosition();
+            long nextSeek = seek(mediaMetaDataList, (long) seek, true) * 1000;
+            MediaPlayerInstance.getMediaPlayer().seekTo(
+                    (int)nextSeek);
+        }
+    };
+
+    private AdapterView.OnClickListener onButtonBackwardClickedListener = new AdapterView.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            int seek = MediaPlayerInstance.getMediaPlayer().getCurrentPosition();
+            long nextSeek = seek(mediaMetaDataList, (long)seek, false) * 1000;
+            MediaPlayerInstance.getMediaPlayer().seekTo(
+                    (int)nextSeek);
+        }
+    };
+
+
+    private static Long seek(List<MediaMetaData> seekList, Long currPos, boolean direction){
+        int len = seekList.size();
+        if(len==0)
+            return -1l; //stop
+
+        int i=0;
+        while (i<len && seekList.get(i).getStartTime() <currPos){
+            i++;
+        }
+
+        if(i==0 && !direction){
+            return 0l; //start
+        }
+
+        if(i==len && direction){
+            return -1l; //stop
+        }
+
+        if(direction){
+            return seekList.get(i).getStartTime();
+        }else {
+            return seekList.get(i-1).getStartTime();
+        }
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +130,12 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         Bundle bundle =getIntent().getExtras();
         podcast = bundle.getParcelable(Constants.PODCAST_KEY);
         songProgressBar.setOnSeekBarChangeListener(this);
+
+        backwardButton = (ImageView) findViewById(R.id.btnBackward);
+        backwardButton.setOnClickListener(onButtonBackwardClickedListener);
+        forwardButton = (ImageView) findViewById(R.id.btnForward);
+        forwardButton.setOnClickListener(onButtonForwardClickedListener);
+
         if(podcast!=null) {
             String podcastUrl = getpodcastInfoUrl(podcast, "abc");
             PodcastRequest<PodcastInfo> podcastInfoRequest = new PodcastRequest<PodcastInfo>(podcastUrl, new Response.ErrorListener() {
@@ -91,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
                 public void onResponse(PodcastInfo response) {
                     Log.d("MainActivity",response + "");
                     Media media = response.getMedia();
-                    List<MediaMetaData> mediaMetaDataList= media.
+                    mediaMetaDataList= media.
                             getMediaMetaDataList();
                     metaDataAdapter = new MetaDataAdapter(MainActivity.this
                             ,mediaMetaDataList);
