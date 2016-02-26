@@ -2,6 +2,7 @@ package com.flipkart.studio34;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -33,6 +36,21 @@ public class AudioLaunchActivity extends AppCompatActivity {
     private List<Podcast> trendingPodcasts;
     String lastNTrendingurl = Constants.LOCALIP + "/studio34/lastNTrendingPods?count=10";
     String lastNPodsUrl = Constants.LOCALIP +  "/studio34/lastNPods";
+    Context context;
+    private LinearLayout homeLinearLayout;
+
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(Constants.PODCAST_KEY,recentPodcasts.get(0));
+            Intent intent = new Intent();
+            intent.setClass(context,MainActivity.class);
+            intent.putExtras(bundle );
+            context.startActivity(intent);
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +63,10 @@ public class AudioLaunchActivity extends AppCompatActivity {
         trendinglinearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
         Type type = new TypeToken<PodCastList>() {
         }.getType();
+        homeLinearLayout = (LinearLayout) findViewById(R.id.homeLinearLayout);
+        homeLinearLayout.setOnClickListener(onClickListener);
 
+        context = this;
 
         PodcastRequest<PodCastList> podcastRequest = new PodcastRequest<PodCastList>(lastNPodsUrl, new Response.ErrorListener() {
             @Override

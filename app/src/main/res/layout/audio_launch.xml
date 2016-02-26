@@ -20,11 +20,13 @@
 
     </android.support.design.widget.AppBarLayout>
     <LinearLayout
+        android:id="@+id/homeLinearLayout"
         android:layout_width="match_parent"
-        android:background="@android:color/black"
+        android:background="@drawable/home"
         android:padding="@dimen/padding_small"
         android:layout_margin="@dimen/padding_small"
-        android:layout_height="150dp"></LinearLayout>
+        android:layout_height="150dp"
+        android:orientation="horizontal"></LinearLayout>
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="200dp">

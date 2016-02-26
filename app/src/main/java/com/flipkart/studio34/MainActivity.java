@@ -9,13 +9,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     private TextView songTotalDurationLabel;
     private Podcast podcast;
     private LinearLayout rootLayout;
+    private MetaDataAdapter metaDataAdapter;
+    private ListView metadataListView;
     private Handler mHandler = new Handler();
     private String url = "http://10.47.2.2/studio34/13Jan2016.mp3";
     private String podcastBaseInfoUrl = Constants.LOCALIP + "/studio34/podcastInfo";
@@ -49,6 +52,18 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
                 podcast.getId() + "&userId=" + userId;
         return url;
     }
+
+    private AdapterView.OnItemClickListener onItemClickedListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            long time = metaDataAdapter.getItem(position).getStartTime() * 1000;
+            MediaPlayerInstance.getMediaPlayer().seekTo(
+                    (int)time);
+        }
+
+
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         songProgressBar = (SeekBar) findViewById(R.id.songProgressBar);
         songTotalDurationLabel = (TextView) findViewById(R.id.songTotalDurationLabel);
         songCurrentDurationLabel = (TextView) findViewById(R.id.songCurrentDurationLabel);
+        metadataListView = (ListView) findViewById(R.id.metadataListView);
         playButton = (ImageView) findViewById(R.id.btnPlay);
         playButton.setOnClickListener(playButtonClickListener);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -84,8 +100,11 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
                     Media media = response.getMedia();
                     List<MediaMetaData> mediaMetaDataList= media.
                             getMediaMetaDataList();
-
-                    initialiseViews(mediaMetaDataList);
+                    metaDataAdapter = new MetaDataAdapter(MainActivity.this
+                            ,mediaMetaDataList);
+                    metadataListView.setOnItemClickListener(onItemClickedListener);
+                    metadataListView.setAdapter(metaDataAdapter);
+                    metaDataAdapter.notifyDataSetChanged();
                     /*recentPodcasts = response.getPodcastList();
                     SongsAdapter recentSongsAdapter = new SongsAdapter(recentPodcasts, AudioLaunchActivity.this);
                     recentSongsView.setLayoutManager(recentlinearLayoutManager);
@@ -142,11 +161,16 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
             data.setText(mediaMetaData.getData() + "");
             rootLayout.addView(view);*/
 
-            LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(
+            /*LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.meta_layout, null);
-            rootLayout.addView(view);
+            rootLayout.addView(view);*/
+            TextView tv = new TextView(this);
+            tv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            tv.setText("Added tv");
+            rootLayout.addView(tv);
         }
+        this.setContentView(rootLayout);
     }
     @Override
     protected void onStart() {
