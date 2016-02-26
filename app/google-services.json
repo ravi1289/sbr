@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_id": "studio-34-37951",
+    "project_number": "655187220890",
+    "name": "Studio 34"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:655187220890:android:9d085092df6807e3",
+        "client_id": "android:com.flipkart.studio34",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.flipkart.studio34"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "655187220890-v0fesf0eavr86uht2100q83jajq6t335.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.flipkart.studio34",
+            "certificate_hash": "FFC04431F4B17052655A130B56B026680ADA9C23"
+          }
+        },
+        {
+          "client_id": "655187220890-p0gm3inhhv4fuus3bu5lnpgbi75c1sc4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}
